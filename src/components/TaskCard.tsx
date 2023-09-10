@@ -2,6 +2,8 @@ import {
   BsCheckCircleFill,
   BsCheckCircle,
   BsFillTrashFill,
+  BsStarFill,
+  BsStar,
 } from "react-icons/bs";
 import { IconContext } from "react-icons";
 import { api } from "~/utils/api";
@@ -12,6 +14,7 @@ export default function TaskCard({ taskId }: { taskId: string }) {
 
   const { mutateAsync: asyncDeleteTask } = api.tasks.delete.useMutation();
   const { mutateAsync: asyncUpdateTask } = api.tasks.updateDone.useMutation();
+  const { mutateAsync: asyncUpdateStarred } = api.tasks.updateStarred.useMutation();
 
   const utils = api.useContext();
 
@@ -24,51 +27,67 @@ export default function TaskCard({ taskId }: { taskId: string }) {
     task = taskQueryResult.data;
   };
 
-  const setTaskComplete = async (id: string) => {
+  const setTaskCompleted = async (id: string, completed: boolean) => {
     await asyncUpdateTask({
       id,
-      done: true,
+      done: completed,
     });
-    console.log("setTaskComplete");
+    console.log("setTaskCompleted", id, completed);
     await taskQueryResult.refetch();
     await utils.tasks.invalidate();
     task = taskQueryResult.data;
-  };
+  }
 
-  const setTaskIncomplete = async (id: string) => {
-    await asyncUpdateTask({
+  const setStarred = async (id: string, starred: boolean) => {
+    await asyncUpdateStarred({
       id,
-      done: false,
+      starred,
     });
-    console.log("setTaskIncomplete");
+    console.log("setStarred");
     await taskQueryResult.refetch();
     await utils.tasks.invalidate();
     task = taskQueryResult.data;
-  };
+  }
 
   if (task === undefined || task === null) {
     return <></>;
   }
+
+  const icons = () => {
+    if (task === undefined || task === null) return (<></>);
+    return (
+    <IconContext.Provider value={{ size: "30px" }}>
+    {task.done ? (
+      <button onClick={() => void setTaskCompleted(taskId, false)}>
+        <BsCheckCircleFill className="flex-none self-center" />
+      </button>
+    ) : (
+      <button onClick={() => void setTaskCompleted(taskId, true)}>
+        <BsCheckCircle className="flex-none self-center" />
+      </button>
+    )}
+    {task.starred ? (
+      <button onClick={() => void setStarred(taskId, false)}>
+        <BsStarFill className="flex-none self-center" />
+      </button>
+    ) : (
+      <button onClick={() => void setStarred(taskId, true)}>
+        <BsStar className="flex-none self-center" />
+      </button>
+    )}
+    <button onClick={() => void deleteTask(taskId)}>
+      <BsFillTrashFill className="flex-none self-center" />
+    </button>
+  </IconContext.Provider>
+  )}
+
 
   if (!task.description) {
     return (
       <div className="flex flex-row justify-between gap-2 bg-white rounded-md px-4 py-2">
         <p className="max-w-[85%] flex-1 break-words text-lg">{task.title}</p>
         <div className="flex flex-row gap-3">
-          <IconContext.Provider value={{ size: "30px" }}>
-            {task.done ? (
-              <button onClick={() => void setTaskIncomplete(taskId)}>
-                <BsCheckCircleFill className="flex-none self-center" />
-              </button>
-            ) : (
-              <button onClick={() => void setTaskComplete(taskId)}>
-                <BsCheckCircle className="flex-none self-center" />
-              </button>
-            )}
-            <button onClick={() => void deleteTask(taskId)}>
-              <BsFillTrashFill className="flex-none self-center" />
-            </button>
-          </IconContext.Provider>
+          {icons()}
         </div>
       </div>
     );
@@ -84,20 +103,7 @@ export default function TaskCard({ taskId }: { taskId: string }) {
             {task.description}
           </p>
           <div className="flex flex-row gap-3">
-            <IconContext.Provider value={{ size: "30px" }}>
-              {task.done ? (
-                <button onClick={() => void setTaskIncomplete(taskId)}>
-                  <BsCheckCircleFill className="flex-none self-center" />
-                </button>
-              ) : (
-                <button onClick={() => void setTaskComplete(taskId)}>
-                  <BsCheckCircle className="flex-none self-center" />
-                </button>
-              )}
-              <button onClick={() => void deleteTask(taskId)}>
-                <BsFillTrashFill className="flex-none self-center" />
-              </button>
-            </IconContext.Provider>
+            {icons()}
           </div>
         </div>
       </div>

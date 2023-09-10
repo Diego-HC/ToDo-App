@@ -1,4 +1,3 @@
-import { exampleRouter } from "~/server/api/routers/example";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { tasksRouter } from "./routers/tasks";
 import { groupsRouter } from "./routers/groups";
@@ -9,7 +8,6 @@ import { groupsRouter } from "./routers/groups";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  example: exampleRouter,
   tasks: tasksRouter,
   groups: groupsRouter,
 });

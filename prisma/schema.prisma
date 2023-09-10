@@ -21,6 +21,7 @@ model Task {
     title       String
     description String?
     done        Boolean    @default(false)
+    starred     Boolean    @default(false)
     dueDate     DateTime?
     author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
     authorId    String

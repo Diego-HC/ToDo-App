@@ -14,7 +14,9 @@ export default function Home() {
   const tasks = api.tasks.getGroupTasks.useQuery(groupId as string);
 
   const [completedTasks, setCompletedTasks] = useState<Array<Task>>([]);
+  const [completedStarredTasks, setCompletedStarredTasks] = useState<Array<Task>>([]);
   const [incompleteTasks, setIncompleteTasks] = useState<Array<Task>>([]);
+  const [incompleteStarredTasks, setIncompleteStarredTasks] = useState<Array<Task>>([]);
 
   const { mutateAsync: asyncCreateTask } = api.tasks.create.useMutation();
 
@@ -34,8 +36,10 @@ export default function Home() {
 
   useEffect(() => {
     if (tasks.data) {
-      setCompletedTasks(tasks.data.filter((task) => task.done === true));
-      setIncompleteTasks(tasks.data.filter((task) => task.done === false));
+      setCompletedStarredTasks(tasks.data.filter((task) => task.done === true && task.starred === true));
+      setCompletedTasks(tasks.data.filter((task) => task.done === true && task.starred === false));
+      setIncompleteStarredTasks(tasks.data.filter((task) => task.done === false && task.starred === true));
+      setIncompleteTasks(tasks.data.filter((task) => task.done === false && task.starred === false));
     }
   }, [tasks.data]);
 
@@ -107,14 +111,24 @@ export default function Home() {
             </button>
           </div>
           <div className="flex max-h-[65%] min-w-[80%] max-w-[80%] flex-1 flex-col gap-8 overflow-y-auto px-3">
+            {incompleteStarredTasks.map((task) => (
+              <div key={task.id} className="text-black">
+                <TaskCard taskId={task.id} />
+              </div>
+            ))}
             {incompleteTasks.map((task) => (
               <div key={task.id} className="text-black">
                 <TaskCard taskId={task.id} />
               </div>
             ))}
-            {incompleteTasks.length !== 0 && completedTasks.length !== 0 && (
+            {(incompleteTasks.length !== 0 || incompleteStarredTasks.length !== 0) && (completedTasks.length !== 0 || completedStarredTasks.length !== 0) && (
               <hr className="border-y" />
             )}
+            {completedStarredTasks.map((task) => (
+              <div key={task.id} className="text-black">
+                <TaskCard taskId={task.id} />
+              </div>
+            ))}
             {completedTasks.map((task) => (
               <div key={task.id} className="text-black">
                 <TaskCard taskId={task.id} />

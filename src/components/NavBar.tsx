@@ -61,7 +61,7 @@ export default function NavBar() {
 
                     <button
                       className=""
-                      onClick={() => void signOut({ redirect: false })}
+                      onClick={() => void signOut({ callbackUrl: "/"})}
                     >
                       Sign Out
                     </button>

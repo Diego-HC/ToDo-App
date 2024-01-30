@@ -18,7 +18,7 @@ export default function TaskCard({ taskId }: { taskId: string }) {
 
   const utils = api.useContext();
 
-  console.log(task);
+  // console.log(task);
 
   const deleteTask = async (id: string) => {
     await asyncDeleteTask({ id });
@@ -32,7 +32,7 @@ export default function TaskCard({ taskId }: { taskId: string }) {
       id,
       done: completed,
     });
-    console.log("setTaskCompleted", id, completed);
+    // console.log("setTaskCompleted", id, completed);
     await taskQueryResult.refetch();
     await utils.tasks.invalidate();
     task = taskQueryResult.data;
@@ -43,7 +43,7 @@ export default function TaskCard({ taskId }: { taskId: string }) {
       id,
       starred,
     });
-    console.log("setStarred");
+    // console.log("setStarred");
     await taskQueryResult.refetch();
     await utils.tasks.invalidate();
     task = taskQueryResult.data;

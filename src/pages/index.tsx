@@ -1,10 +1,26 @@
+import { useSession } from "next-auth/react";
 import Layout from "~/components/layout";
 
 export default function Home() {
+  const { data: sessionData } = useSession();
+
   return (
     <>
       <Layout title="Home" description="Home page">
-        <p>hello</p>
+        <div className="my-10 -ml-44">
+          {sessionData?.user?.name ? (
+            <div className="text-5xl font-extrabold tracking-tight text-white text-center">
+              <h1>Welcome {sessionData.user.name}!</h1>
+              <h3>
+                Get started by creating a new list or selecting an existing one.
+              </h3>
+            </div>
+          ) : (
+            <h1 className="text-5xl font-extrabold tracking-tight text-white">
+              Welcome to this To Do App, sign in and get started!
+            </h1>
+          )}
+        </div>
       </Layout>
     </>
   );

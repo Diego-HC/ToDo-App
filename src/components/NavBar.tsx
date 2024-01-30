@@ -9,8 +9,6 @@ export default function NavBar() {
   const { data: sessionData } = useSession();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  console.log(sessionData);
-
   return (
     <div className="flex h-20 min-h-[5rem] w-full items-center bg-slate-800 text-xl">
       <div className="mx-5 flex w-full items-center justify-start">

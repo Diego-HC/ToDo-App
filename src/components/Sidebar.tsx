@@ -86,7 +86,7 @@ export default function Sidebar() {
                       title: groupTitle,
                     });
                   } catch (error) {
-                    console.log(error);
+                    // console.log(error);
                     setIsNameInvalid(true);
 
                     return;
